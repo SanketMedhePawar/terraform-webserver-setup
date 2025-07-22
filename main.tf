@@ -62,16 +62,29 @@ resource "aws_instance" "http_server" {
     private_key = file(var.aws_key_pair)
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum update -y",
-      "sudo yum install httpd -y",
-      "sudo systemctl start httpd",
-      "sudo systemctl enable httpd",
-      "sudo usermod -a -G apache ec2-user",
-      "sudo chmod 755 /var/www/html",
-      "cd /var/www/html",
-      "echo Welcome to Webserver ${self.public_dns} | sudo tee /var/www/html/index.html"
-    ]
-  }
+ provisioner "remote-exec" {
+  inline = [
+    "sudo yum update -y",
+    "sudo yum install httpd -y",
+    "sudo systemctl start httpd",
+    "sudo systemctl enable httpd",
+    "sudo usermod -a -G apache ec2-user",
+    "sudo chmod 755 /var/www/html",
+    "cd /var/www/html",
+    "echo '<!DOCTYPE html>
+<html>
+<head>
+    <title>My Simple Static Website</title>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 50px; }
+      h1 { color: #333; }
+      p { font-size: 18px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Static Website!</h1>
+    <p>Hosted on EC2 instance: ${self.public_dns}</p>
+</body>
+</html>' | sudo tee /var/www/html/index.html"
+  ]
 }
