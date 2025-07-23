@@ -64,7 +64,7 @@ resource "aws_security_group" "http_server_sg" {
 }
 
 resource "aws_instance" "http_server" {
-  ami                         = "ami-0cbbe2c6a1bb2ad63"
+  ami                         = "ami-0b32d400456908bf9 "
   instance_type               = "t3.medium"
   key_name                    = "mywebserver"  # Using your existing key pair
   subnet_id                   = data.aws_subnets.default.ids[0]
